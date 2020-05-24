@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 import { makeStyles } from '@material-ui/core';
 
-import ItemsList from '../components/ItemsList';
-import AddItem from '../components/AddItem';
+import ItemsList from '../components/ItemsList/ItemsList';
+import AddItem, { Item } from '../components/AddItem';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     justifyContent: 'space-between',
     overflow: 'hidden',
-  }
+  },
 }));
 
 const ListPage: React.FC = () => {
@@ -20,10 +20,23 @@ const ListPage: React.FC = () => {
 
   const classes = useStyles();
 
+  const handleCheckItem = (item: Item): void => {
+    const idx = items.indexOf(item);
+
+    if (idx < 0)
+      return;
+
+    setItems((i) => [
+      ...i.slice(0, idx),
+      { ...item, checked: !item.checked },
+      ...i.slice(idx + 1),
+    ]);
+  };
+
   return (
     <div className={classes.container}>
-      <ItemsList items={items} />
-      <AddItem addItem={(item: string) => setItems((i) => [...i, item])} />
+      <ItemsList items={items} checkItem={handleCheckItem} />
+      <AddItem addItem={(item): void => setItems((i) => [...i, item])} />
     </div>
   )
 };

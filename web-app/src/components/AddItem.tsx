@@ -2,21 +2,26 @@ import React, { useState } from 'react';
 
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 
-type AddItemProps = {
-  addItem: (item: string) => void;
+export type Item = {
+  name: string;
+  checked: boolean;
 };
 
-const AddItem: React.FC<AddItemProps> = ({ addItem }) => {
-  const [item, setItem] = useState('');
+type AddItemProps = {
+  addItem: (item: Item ) => void;
+};
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+const AddItem: React.FC<AddItemProps> = ({ addItem }: AddItemProps) => {
+  const [item, setItem] = useState<Item>({ name: '', checked: false });
+
+  const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
 
-    if (item.trim().length === 0)
+    if (item.name.trim().length === 0)
       return;
 
     addItem(item);
-    setItem('');
+    setItem({ name: '', checked: false });
   };
 
   return (
@@ -26,8 +31,8 @@ const AddItem: React.FC<AddItemProps> = ({ addItem }) => {
         type="text"
         margin="dense"
         placeholder="Add..."
-        value={item}
-        onChange={(e) => setItem(e.target.value)}
+        value={item.name}
+        onChange={(e): void => setItem({ name: e.target.value, checked: false})}
       />
     </form>
   );
