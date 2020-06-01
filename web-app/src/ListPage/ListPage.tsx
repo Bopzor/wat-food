@@ -23,9 +23,11 @@ const ListPage: React.FC = () => {
   const handleCheckItem = (item: Item): void => {
     const idx = items.indexOf(item);
 
-    if (idx < 0)
+    if (idx < 0) {
       return;
+    }
 
+    // eslint-disable-next-line prettier/prettier
     setItems((i) => [
       ...i.slice(0, idx),
       { ...item, checked: !item.checked },
@@ -38,7 +40,7 @@ const ListPage: React.FC = () => {
       <ItemsList items={items} checkItem={handleCheckItem} />
       <AddItem addItem={(item): void => setItems((i) => [...i, item])} />
     </div>
-  )
+  );
 };
 
 export default ListPage;

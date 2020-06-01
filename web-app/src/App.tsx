@@ -28,7 +28,7 @@ const App: React.FC = () => {
         <ListPage />
       </div>
     </ThemeProvider>
-  )
+  );
 };
 
 export default App;

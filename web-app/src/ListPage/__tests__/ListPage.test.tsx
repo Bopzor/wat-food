@@ -1,14 +1,13 @@
 import React from 'react';
 
 import { render, fireEvent } from '@testing-library/react';
-import userEvent from '@testing-library/user-event'
+import userEvent from '@testing-library/user-event';
 
 import ListPage from '../ListPage';
 
 describe('ListPage', () => {
-
   it('should add input item on submit', async () => {
-    const { getByText, getByPlaceholderText, getByTestId, getByLabelText } = render(<ListPage />)
+    const { getByText, getByPlaceholderText, getByTestId, getByLabelText } = render(<ListPage />);
 
     const addInput = getByPlaceholderText('Add...') as HTMLInputElement;
 
@@ -21,5 +20,4 @@ describe('ListPage', () => {
     expect(getByText('item 1'));
     expect(checkbox.checked).toBe(false);
   });
-
 });

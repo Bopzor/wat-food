@@ -21,7 +21,10 @@
     "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:@typescript-eslint/recommended-requiring-type-checking",
-    "plugin:react/recommended"
+    "plugin:react/recommended",
+    "prettier/@typescript-eslint",
+    "plugin:prettier/recommended",
+    "prettier/react"
   ],
   "rules": {
     "comma-dangle": ["error", "always-multiline"]

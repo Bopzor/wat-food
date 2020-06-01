@@ -26,26 +26,24 @@ const ItemsList: React.FC<ItemsListProps> = ({ items, checkItem }: ItemsListProp
 
   return (
     <List className={classes.list}>
-      { items.map((item: Item, idx) => (
+      {items.map((item: Item, idx) => (
         <React.Fragment key={`${item.name}-${idx}`}>
           <ListItem disabled={item.checked}>
-
             <ListItemIcon>
-                <Checkbox
-                  edge="start"
-                  checked={item.checked}
-                  onChange={(): void => checkItem(item)}
-                  inputProps={{ 'aria-label': `item state ${idx}` }}
-                />
-              </ListItemIcon>
+              <Checkbox
+                edge="start"
+                checked={item.checked}
+                onChange={(): void => checkItem(item)}
+                inputProps={{ 'aria-label': `item state ${idx}` }}
+              />
+            </ListItemIcon>
 
             <ListItemText primary={item.name} />
-
           </ListItem>
 
           <Divider component="li" />
         </React.Fragment>
-      )) }
+      ))}
     </List>
   );
 };
