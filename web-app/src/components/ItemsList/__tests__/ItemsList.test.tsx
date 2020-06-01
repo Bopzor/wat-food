@@ -8,11 +8,9 @@ describe('ItemsList', () => {
   it('should check item', () => {
     const mockCheckItem = jest.fn();
 
-    const { getByLabelText } = render(
-      <ItemsList items={[{ name: 'item 1', checked: false }]} checkItem={mockCheckItem} />,
-    );
+    const { getByText } = render(<ItemsList items={[{ name: 'item 1', checked: false }]} checkItem={mockCheckItem} />);
 
-    const checkbox = getByLabelText('item state 0') as HTMLInputElement;
+    const checkbox = getByText('item 1') as HTMLInputElement;
     fireEvent.click(checkbox);
 
     expect(mockCheckItem).toHaveBeenCalledWith({ name: 'item 1', checked: false });
@@ -21,11 +19,9 @@ describe('ItemsList', () => {
   it('should uncheck item', () => {
     const mockCheckItem = jest.fn();
 
-    const { getByLabelText } = render(
-      <ItemsList items={[{ name: 'item 1', checked: true }]} checkItem={mockCheckItem} />,
-    );
+    const { getByText } = render(<ItemsList items={[{ name: 'item 1', checked: true }]} checkItem={mockCheckItem} />);
 
-    const checkbox = getByLabelText('item state 0') as HTMLInputElement;
+    const checkbox = getByText('item 1') as HTMLInputElement;
     fireEvent.click(checkbox);
 
     expect(mockCheckItem).toHaveBeenCalledWith({ name: 'item 1', checked: true });
