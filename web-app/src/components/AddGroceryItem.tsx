@@ -2,17 +2,17 @@ import React, { useState } from 'react';
 
 import OutlinedInput from '@material-ui/core/OutlinedInput';
 
-export type Item = {
+export type GroceryItemType = {
   name: string;
   checked: boolean;
 };
 
-type AddItemProps = {
-  addItem: (item: Item) => void;
+type GroceryItem = {
+  addItem: (item: GroceryItemType) => void;
 };
 
-const AddItem: React.FC<AddItemProps> = ({ addItem }: AddItemProps) => {
-  const [item, setItem] = useState<Item>({ name: '', checked: false });
+const GroceryItem: React.FC<GroceryItem> = ({ addItem }) => {
+  const [item, setItem] = useState<GroceryItemType>({ name: '', checked: false });
 
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>): void => {
     event.preventDefault();
@@ -37,4 +37,4 @@ const AddItem: React.FC<AddItemProps> = ({ addItem }: AddItemProps) => {
   );
 };
 
-export default AddItem;
+export default GroceryItem;

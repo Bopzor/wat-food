@@ -3,7 +3,7 @@ import React from 'react';
 import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { teal, deepOrange } from '@material-ui/core/colors';
 
-import ListPage from './ListPage/ListPage';
+import GroceryListPage from './GroceryListPage/GroceryListPage';
 
 const theme = createMuiTheme({
   palette: {
@@ -25,7 +25,7 @@ const App: React.FC = () => {
   return (
     <ThemeProvider theme={theme}>
       <div className={classes.container} data-testid="app">
-        <ListPage />
+        <GroceryListPage />
       </div>
     </ThemeProvider>
   );

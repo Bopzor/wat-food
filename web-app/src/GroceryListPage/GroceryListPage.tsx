@@ -2,8 +2,8 @@ import React, { useState } from 'react';
 
 import { makeStyles } from '@material-ui/core';
 
-import ItemsList from '../components/ItemsList/ItemsList';
-import AddItem, { Item } from '../components/AddItem';
+import GroceryList from '../components/GroceryList/GroceryList';
+import AddItem, { GroceryItemType } from '../components/AddGroceryItem';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -15,12 +15,12 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const ListPage: React.FC = () => {
+const GroceryListPage: React.FC = () => {
   const [items, setItems] = useState([]);
 
   const classes = useStyles();
 
-  const handleCheckItem = (item: Item): void => {
+  const handleCheckItem = (item: GroceryItemType): void => {
     const idx = items.indexOf(item);
 
     if (idx < 0) {
@@ -35,12 +35,26 @@ const ListPage: React.FC = () => {
     ]);
   };
 
+  const handleDeleteItem = (item: GroceryItemType): void => {
+    const idx = items.indexOf(item);
+
+    if (idx < 0) {
+      return;
+    }
+
+    // eslint-disable-next-line prettier/prettier
+    setItems((i) => [
+      ...i.slice(0, idx),
+      ...i.slice(idx + 1),
+    ]);
+  };
+
   return (
     <div className={classes.container}>
-      <ItemsList items={items} checkItem={handleCheckItem} />
+      <GroceryList items={items} checkItem={handleCheckItem} deleteItem={handleDeleteItem} />
       <AddItem addItem={(item): void => setItems((i) => [...i, item])} />
     </div>
   );
 };
 
-export default ListPage;
+export default GroceryListPage;
