@@ -8,9 +8,12 @@
     "module": "commonjs",
     "moduleResolution": "node",
     "outDir": "./dist",
-    "baseUrl": "./src",
+    "baseUrl": "./",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
+    "declaration": true,
+    "noImplicitAny": false,
+    "allowSyntheticDefaultImports": true,
     "sourceMap": true
   },
   "include": [
