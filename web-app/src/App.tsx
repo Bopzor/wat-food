@@ -3,7 +3,7 @@ import React from 'react';
 import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core';
 import { teal, deepOrange } from '@material-ui/core/colors';
 
-import GroceryListPage from './GroceryListPage/GroceryListPage';
+import GroceryListPage from './components/GroceryListPage/GroceryListPage';
 
 const theme = createMuiTheme({
   palette: {

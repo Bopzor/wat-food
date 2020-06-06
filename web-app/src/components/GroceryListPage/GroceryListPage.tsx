@@ -1,9 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 
 import { makeStyles } from '@material-ui/core';
 
-import GroceryList from '../components/GroceryList/GroceryList';
-import AddItem, { GroceryItemType } from '../components/AddGroceryItem';
+import GroceryList from '../GroceryList/GroceryList';
+import AddItem, { GroceryItemType } from '../AddGroceryItem';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -16,9 +16,17 @@ const useStyles = makeStyles(() => ({
 }));
 
 const GroceryListPage: React.FC = () => {
-  const [items, setItems] = useState([]);
+  const savedItems: GroceryItemType[] | null = localStorage.getItem('wat-food')
+    ? JSON.parse(localStorage.getItem('wat-food'))
+    : null;
+
+  const [items, setItems] = useState(savedItems || []);
 
   const classes = useStyles();
+
+  useEffect(() => {
+    localStorage.setItem('wat-food', JSON.stringify(items));
+  }, [items]);
 
   const handleCheckItem = (item: GroceryItemType): void => {
     const idx = items.indexOf(item);

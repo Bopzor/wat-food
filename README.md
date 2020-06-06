@@ -32,15 +32,17 @@
 4. Remove an item
     - swipe
 
-5. Setup api
+5. Store in LocalStorage
 
-6. Save item in db
+6. Setup api
 
-7. Autocomplete input
+7. Save item in db
 
-8. Validate item name
+8. Autocomplete input
+
+9. Validate item name
     - add a 'verifed' column. Return only `verified` is `true`.
 
-9. Categories
+10. Categories
 
-10. Sort categories
+11. Sort categories
