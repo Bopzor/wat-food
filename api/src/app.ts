@@ -1,3 +1,4 @@
+import cors from 'cors';
 import express, { Application, NextFunction, Request, Response } from 'express';
 
 import ShopItemController from './shop-item/shop-item-controller';
@@ -12,6 +13,7 @@ class App {
   }
 
   private init() {
+    this._app.use(cors());
     this._app.use(express.json());
 
     this._app.get('/', (req: Request, res: Response, next: NextFunction) => {

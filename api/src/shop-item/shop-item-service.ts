@@ -11,7 +11,10 @@ class ShopItemService {
   }
 
   async get(name: string): Promise<ShopItem> {
-    const shopItem: ShopItem = await this.repository.findOne({ where: { latinize: latinize(name) } });
+    const shopItem: ShopItem = await this.repository.findOne({
+      select: ['name', 'id'],
+      where: { latinize: latinize(name) },
+    });
 
     if (!shopItem) {
       return await this.add(name);
@@ -30,7 +33,11 @@ class ShopItemService {
   }
 
   async search(name: string): Promise<ShopItem[]> {
-    return await this.repository.find({ latinize: Like(`%${latinize(name)}%`) });
+    try {
+      return await this.repository.find({ select: ['name', 'id'], where: { latinize: Like(`%${latinize(name)}%`) } });
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
 

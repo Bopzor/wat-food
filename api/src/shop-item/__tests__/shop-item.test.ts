@@ -25,6 +25,7 @@ describe('GET /shop-item', () => {
 
     it('should find existing shop-item', async () => {
       const shopItem: ShopItem = await new ShopItemService().add('pomme');
+      delete shopItem.latinize;
 
       const result = await factory.app.get('/shop-item?name=pomme');
 
@@ -34,6 +35,7 @@ describe('GET /shop-item', () => {
 
     it('should find existing shop-item case insensitive', async () => {
       const shopItem: ShopItem = await new ShopItemService().add('pomme');
+      delete shopItem.latinize;
 
       const result = await factory.app.get('/shop-item?name=PoMme');
 
@@ -43,6 +45,7 @@ describe('GET /shop-item', () => {
 
     it('should find existing shop-item accent insensitive', async () => {
       const shopItem: ShopItem = await new ShopItemService().add('comté');
+      delete shopItem.latinize;
 
       const result = await factory.app.get('/shop-item?name=comté');
 
@@ -61,7 +64,9 @@ describe('GET /shop-item', () => {
 
     it('should send matched results', async () => {
       const shopItem1: ShopItem = await new ShopItemService().add('blé');
+      delete shopItem1.latinize;
       const shopItem2: ShopItem = await new ShopItemService().add('bleu');
+      delete shopItem2.latinize;
 
       const result = await factory.app.get('/shop-item/search?name=bl');
 
