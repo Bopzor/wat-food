@@ -7,4 +7,7 @@ export class ShopItem {
 
   @Column()
   name: string;
+
+  @Column()
+  latinize: string;
 }

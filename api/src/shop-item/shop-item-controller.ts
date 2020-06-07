@@ -21,7 +21,7 @@ class ItemController {
   getShopItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
     const { name } = req.query;
 
-    const item: ShopItem = await this.shopItemService.get(name as string);
+    const item: ShopItem = await this.shopItemService.get((name as string).toLowerCase());
 
     if (!item) {
       res.status(404).send(`${name as string} not found.`);
