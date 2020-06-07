@@ -21,6 +21,7 @@ export class TestFactory {
     username: 'test',
     password: 'test',
     database: 'test',
+    dropSchema: true,
     synchronize: true,
     logging: false,
     entities: ['src/entity/**/*.ts'],

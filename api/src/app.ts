@@ -1,5 +1,7 @@
 import express, { Application, NextFunction, Request, Response } from 'express';
 
+import ShopItemController from './shop-item/shop-item-controller';
+
 const VERSION = process.env.npm_package_version;
 
 class App {
@@ -16,6 +18,8 @@ class App {
       res.status(200).send({ version: VERSION });
       next();
     });
+
+    this._app.use('/shop-item', new ShopItemController().router);
 
     this._app.use((error: Error, req: Request, res: Response, next: NextFunction) => {
       console.log(error);

@@ -1,9 +1,10 @@
 import { TestFactory } from './testing/factory';
 
 describe('GET /', () => {
-  const factory: TestFactory = new TestFactory();
+  let factory: TestFactory;
 
   beforeEach(async () => {
+    factory = new TestFactory();
     await factory.init();
   });
 

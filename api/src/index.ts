@@ -6,8 +6,6 @@ import App from './app';
 
 const PORT = process.env.PORT || 3000;
 
-export const app = new App().app;
-
 const main = async () => {
   try {
     const connection: Connection = await createConnection();
