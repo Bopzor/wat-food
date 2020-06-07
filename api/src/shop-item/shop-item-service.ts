@@ -1,5 +1,5 @@
 import latinize from 'latinize';
-import { getConnection, Repository } from 'typeorm';
+import { getConnection, Like, Repository } from 'typeorm';
 
 import { ShopItem } from '../entity/ShopItem';
 
@@ -27,6 +27,10 @@ class ShopItemService {
     shopItem.latinize = latinize(name);
 
     return await this.repository.save(shopItem);
+  }
+
+  async search(name: string): Promise<ShopItem[]> {
+    return await this.repository.find({ latinize: Like(`%${latinize(name)}%`) });
   }
 }
 

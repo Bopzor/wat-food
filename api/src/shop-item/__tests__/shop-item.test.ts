@@ -15,37 +15,58 @@ describe('GET /shop-item', () => {
     await factory.close();
   });
 
-  it('should add unexisting shop-item and return it', async () => {
-    const result = await factory.app.get('/shop-item?name=pomme');
+  describe('/', () => {
+    it('should add unexisting shop-item and return it', async () => {
+      const result = await factory.app.get('/shop-item?name=pomme');
 
-    expect(result.status).toEqual(200);
-    expect(result.body).toMatchObject({ name: 'pomme' });
+      expect(result.status).toEqual(200);
+      expect(result.body).toMatchObject({ name: 'pomme' });
+    });
+
+    it('should find existing shop-item', async () => {
+      const shopItem: ShopItem = await new ShopItemService().add('pomme');
+
+      const result = await factory.app.get('/shop-item?name=pomme');
+
+      expect(result.status).toEqual(200);
+      expect(result.body).toMatchObject(shopItem);
+    });
+
+    it('should find existing shop-item case insensitive', async () => {
+      const shopItem: ShopItem = await new ShopItemService().add('pomme');
+
+      const result = await factory.app.get('/shop-item?name=PoMme');
+
+      expect(result.status).toEqual(200);
+      expect(result.body).toMatchObject(shopItem);
+    });
+
+    it('should find existing shop-item accent insensitive', async () => {
+      const shopItem: ShopItem = await new ShopItemService().add('comté');
+
+      const result = await factory.app.get('/shop-item?name=comté');
+
+      expect(result.status).toEqual(200);
+      expect(result.body).toMatchObject(shopItem);
+    });
   });
 
-  it('should find existing shop-item', async () => {
-    const shopItem: ShopItem = await new ShopItemService().add('pomme');
+  describe('/search', () => {
+    it('should send empty array if no match', async () => {
+      const result = await factory.app.get('/shop-item/search?name=sponge');
 
-    const result = await factory.app.get('/shop-item?name=pomme');
+      expect(result.status).toEqual(200);
+      expect(result.body).toEqual([]);
+    });
 
-    expect(result.status).toEqual(200);
-    expect(result.body).toMatchObject(shopItem);
-  });
+    it('should send matched results', async () => {
+      const shopItem1: ShopItem = await new ShopItemService().add('blé');
+      const shopItem2: ShopItem = await new ShopItemService().add('bleu');
 
-  it('should find existing shop-item case insensitive', async () => {
-    const shopItem: ShopItem = await new ShopItemService().add('pomme');
+      const result = await factory.app.get('/shop-item/search?name=bl');
 
-    const result = await factory.app.get('/shop-item?name=PoMme');
-
-    expect(result.status).toEqual(200);
-    expect(result.body).toMatchObject(shopItem);
-  });
-
-  it('should find existing shop-item accent insensitive', async () => {
-    const shopItem: ShopItem = await new ShopItemService().add('comté');
-
-    const result = await factory.app.get('/shop-item?name=comté');
-
-    expect(result.status).toEqual(200);
-    expect(result.body).toMatchObject(shopItem);
+      expect(result.status).toEqual(200);
+      expect(result.body).toMatchObject([shopItem1, shopItem2]);
+    });
   });
 });

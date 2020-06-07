@@ -32,8 +32,19 @@ class ItemController {
     next();
   };
 
+  searchShopItem = async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { name } = req.query;
+
+    const shopItems: ShopItem[] = await this.shopItemService.search((name as string).toLowerCase());
+
+    res.status(200).send(shopItems);
+
+    next();
+  };
+
   init(): void {
     this._router.get('/', this.getShopItem);
+    this._router.get('/search', this.searchShopItem);
   }
 }
 
