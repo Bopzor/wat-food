@@ -1,15 +1,30 @@
-import * as express from 'express';
+import { Application } from 'express';
+import { createServer, Server as HttpServer } from 'http';
+import { Connection, createConnection } from 'typeorm';
+
+import App from './app';
 
 const PORT = process.env.PORT || 3000;
 
-export const app = express();
+export const app = new App().app;
 
-app.use(express.json());
+const main = async () => {
+  try {
+    const connection: Connection = await createConnection();
 
-app.get('/', (req, res, next) => {
-  res.status(200).send('hello');
-});
+    const app: Application = new App().app;
 
-app.listen(PORT, () => {
-  console.log(`App listening on ${PORT}`);
-});
+    const server: HttpServer = createServer(app).listen(PORT);
+
+    server.on('listening', () => console.log(`App listening on ${PORT}`));
+
+    server.on('close', () => {
+      console.log('App closed');
+      void connection.close();
+    });
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+main().catch(console.error);
