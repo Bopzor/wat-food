@@ -1,13 +1,11 @@
 import React from 'react';
 
 import { useTheme } from '@material-ui/core';
-
 import Checkbox from '@material-ui/core/Checkbox';
 import DeleteIcon from '@material-ui/icons/Delete';
-
 import SwipeableListItem from 'mui-swipeable-list-item';
 
-import { GroceryItemType } from '../AddGroceryItem';
+import { GroceryItemType } from '../AddGroceryItem/AddGroceryItem';
 
 type GroceryItemProps = {
   item: GroceryItemType;

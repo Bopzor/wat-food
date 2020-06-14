@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { makeStyles, createMuiTheme, ThemeProvider } from '@material-ui/core';
-import { teal, deepOrange } from '@material-ui/core/colors';
+import { createMuiTheme, makeStyles, ThemeProvider } from '@material-ui/core';
+import { deepOrange, teal } from '@material-ui/core/colors';
 
 import GroceryListPage from './components/GroceryListPage/GroceryListPage';
 

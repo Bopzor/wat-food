@@ -1,9 +1,25 @@
 import React, { useState, useEffect } from 'react';
 
+import useAxios from 'axios-hooks';
 import { makeStyles } from '@material-ui/core';
 
 import GroceryList from '../GroceryList/GroceryList';
-import AddItem, { GroceryItemType } from '../AddGroceryItem';
+import AddGroceryItem, { GroceryItemType } from '../AddGroceryItem/AddGroceryItem';
+
+const useAddGroceryItem = () => {
+  const [{ data, error }, add] = useAxios('http://localhost:3000/shop-item', { manual: true });
+
+  if (error) {
+    console.log(error);
+  }
+
+  return {
+    item: data && { ...data, checked: false },
+    add: (name: string): void => {
+      add({ params: { name } });
+    },
+  };
+};
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -21,12 +37,27 @@ const GroceryListPage: React.FC = () => {
     : null;
 
   const [items, setItems] = useState(savedItems || []);
+  const { item, add } = useAddGroceryItem();
 
   const classes = useStyles();
 
   useEffect(() => {
     localStorage.setItem('wat-food', JSON.stringify(items));
   }, [items]);
+
+  useEffect(() => {
+    if (item) {
+      setItems((i) => [...i.slice(i.length - 2), item]);
+    }
+  }, [item, setItems]);
+
+  const handleAddItem = (item: GroceryItemType): void => {
+    setItems((i) => [...i, item]);
+
+    if (!item.id) {
+      add(item.name);
+    }
+  };
 
   const handleCheckItem = (item: GroceryItemType): void => {
     const idx = items.indexOf(item);
@@ -60,7 +91,7 @@ const GroceryListPage: React.FC = () => {
   return (
     <div className={classes.container}>
       <GroceryList items={items} checkItem={handleCheckItem} deleteItem={handleDeleteItem} />
-      <AddItem addItem={(item): void => setItems((i) => [...i, item])} />
+      <AddGroceryItem addItem={handleAddItem} />
     </div>
   );
 };

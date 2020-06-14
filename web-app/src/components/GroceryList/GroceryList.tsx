@@ -1,10 +1,9 @@
 import React from 'react';
 
 import { makeStyles } from '@material-ui/core';
-
 import List from '@material-ui/core/List';
 
-import { GroceryItemType } from '../AddGroceryItem';
+import { GroceryItemType } from '../AddGroceryItem/AddGroceryItem';
 import GroceryItem from '../GroceryItem/GroceryItem';
 
 const useStyles = makeStyles(() => ({
