@@ -1,25 +1,11 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import useAxios from 'axios-hooks';
 import { makeStyles } from '@material-ui/core';
 
-import GroceryList from '../GroceryList/GroceryList';
 import AddGroceryItem, { GroceryItemType } from '../AddGroceryItem/AddGroceryItem';
+import GroceryList from '../GroceryList/GroceryList';
 
-const useAddGroceryItem = () => {
-  const [{ data, error }, add] = useAxios('http://localhost:3000/shop-item', { manual: true });
-
-  if (error) {
-    console.log(error);
-  }
-
-  return {
-    item: data && { ...data, checked: false },
-    add: (name: string): void => {
-      add({ params: { name } });
-    },
-  };
-};
+import { useAddGroceryItem } from './use-add-grocery-item';
 
 const useStyles = makeStyles(() => ({
   container: {
