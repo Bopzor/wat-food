@@ -12,7 +12,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-type GroceryListProps = {
+export type GroceryListProps = {
   items: GroceryItemType[];
   checkItem: (item: GroceryItemType) => void;
   deleteItem: (item: GroceryItemType) => void;

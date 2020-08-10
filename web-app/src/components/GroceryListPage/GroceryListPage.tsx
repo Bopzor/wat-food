@@ -23,7 +23,7 @@ const GroceryListPage: React.FC = () => {
     : null;
 
   const [items, setItems] = useState(savedItems || []);
-  const { item, add } = useAddGroceryItem();
+  const { item, setItem, add } = useAddGroceryItem();
 
   const classes = useStyles();
 
@@ -33,7 +33,19 @@ const GroceryListPage: React.FC = () => {
 
   useEffect(() => {
     if (item) {
-      setItems((i) => [...i.slice(i.length - 2), item]);
+      const idx = items.findIndex((i) => i.name === item.name);
+
+      if (idx < 0) {
+        return;
+      }
+
+      // eslint-disable-next-line prettier/prettier
+      setItems((i) => [
+        ...i.slice(0, idx),
+        item,
+        ...i.slice(idx + 1),
+      ]);
+      setItem(null);
     }
   }, [item, setItems]);
 
@@ -46,7 +58,7 @@ const GroceryListPage: React.FC = () => {
   };
 
   const handleCheckItem = (item: GroceryItemType): void => {
-    const idx = items.indexOf(item);
+    const idx = items.findIndex((i) => i.name === item.name);
 
     if (idx < 0) {
       return;
@@ -61,7 +73,7 @@ const GroceryListPage: React.FC = () => {
   };
 
   const handleDeleteItem = (item: GroceryItemType): void => {
-    const idx = items.indexOf(item);
+    const idx = items.findIndex((i) => i.name === item.name);
 
     if (idx < 0) {
       return;

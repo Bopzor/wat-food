@@ -70,6 +70,7 @@ const AddGroceryItem: React.FC<AddGroceryItemProps> = ({ addItem }) => {
   return (
     <form onSubmit={handleSubmit} data-testid="add item">
       <Autocomplete
+        freeSolo
         open={open}
         onOpen={(): void => setOpen(true)}
         onClose={(): void => setOpen(false)}

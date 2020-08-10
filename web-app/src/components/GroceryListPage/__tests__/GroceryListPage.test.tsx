@@ -3,10 +3,9 @@
 import React from 'react';
 
 import { fireEvent, render } from '@testing-library/react';
-import userEvent from '@testing-library/user-event';
-import { act } from 'react-dom/test-utils';
 
 import { AddGroceryItemProps } from '../../AddGroceryItem/AddGroceryItem';
+import { GroceryListProps } from '../../GroceryList/GroceryList';
 import GroceryListPage from '../GroceryListPage';
 import { useAddGroceryItem } from '../use-add-grocery-item';
 
@@ -15,6 +14,30 @@ jest.mock('../../AddGroceryItem/AddGroceryItem.tsx', () => ({
   // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, react/display-name
   default: ({ addItem }: AddGroceryItemProps) => (
     <button onClick={(): void => addItem({ name: 'pomme', checked: false })}>Submit</button>
+  ),
+}));
+
+jest.mock('../../GroceryList/GroceryList.tsx', () => ({
+  __esModule: true,
+  // eslint-disable-next-line @typescript-eslint/explicit-function-return-type, react/display-name
+  default: ({ items, checkItem, deleteItem }: GroceryListProps) => (
+    <>
+      {items.map((i) => (
+        <div key={i.name}>
+          <div>{i.name}</div>
+          <input
+            type="checkbox"
+            onChange={(): void => {
+              return;
+            }}
+            checked={i.checked}
+            aria-label={`item state ${i.name}`}
+          />
+        </div>
+      ))}
+      <button onClick={(): void => checkItem({ name: 'pomme', checked: false, id: 1 })}>Checked</button>
+      <button onClick={(): void => deleteItem({ name: 'pomme', checked: true, id: 1 })}>Delete</button>
+    </>
   ),
 }));
 
@@ -31,22 +54,15 @@ const mockUseAddGroceryItem = (returnValue = {}) => {
 };
 
 describe('GroceryListPage', () => {
-  beforeEach(() => {
-    localStorage.clear();
-
-    Storage.prototype.setItem = jest.fn();
-    Storage.prototype.getItem = jest.fn();
+  afterEach(() => {
+    jest.resetAllMocks();
   });
 
   it('should store item on submit', () => {
     mockUseAddGroceryItem();
     const { getByText } = render(<GroceryListPage />);
 
-    const submitButton = getByText('Submit');
-
-    act(() => {
-      submitButton.click();
-    });
+    fireEvent.click(getByText('Submit'));
 
     const value = JSON.stringify([{ name: 'pomme', checked: false }]);
 
@@ -54,8 +70,10 @@ describe('GroceryListPage', () => {
   });
 
   it('should display added item in list ', () => {
-    mockUseAddGroceryItem({ item: { name: 'pomme', checked: false, id: 1 } });
+    mockUseAddGroceryItem();
     const { getByText } = render(<GroceryListPage />);
+
+    fireEvent.click(getByText('Submit'));
 
     expect(getByText('pomme')).toBeVisible();
   });
@@ -77,63 +95,35 @@ describe('GroceryListPage', () => {
     expect(checkbox.checked).toBe(true);
   });
 
-  it('should send item to api on submit', async () => {
+  it('should send item to api on submit', () => {
     const mockAdd = jest.fn();
     mockUseAddGroceryItem({ add: mockAdd });
     const { getByText } = render(<GroceryListPage />);
 
-    // eslint-disable-next-line @typescript-eslint/await-thenable
-    await act(async () => {
-      // eslint-disable-next-line @typescript-eslint/await-thenable
-      await fireEvent.click(getByText('Submit'));
-    });
+    fireEvent.click(getByText('Submit'));
 
     expect(mockAdd).toHaveBeenCalledWith('pomme');
   });
 
-  it('should checked item on checkbox click', () => {
+  it('should update localStorage on toggle checkbox', () => {
     mockUseAddGroceryItem();
     localStorage.getItem.mockReturnValue(JSON.stringify([{ name: 'pomme', checked: false, id: 1 }]));
 
-    const { getByLabelText } = render(<GroceryListPage />);
+    const { getByText } = render(<GroceryListPage />);
 
-    const checkbox = getByLabelText('item state pomme') as HTMLInputElement;
-
-    act(() => {
-      userEvent.click(checkbox);
-    });
-
-    expect(checkbox.checked).toBe(true);
-  });
-
-  it('should checked item on checkbox click', () => {
-    mockUseAddGroceryItem();
-    localStorage.getItem.mockReturnValue(JSON.stringify([{ name: 'pomme', checked: true, id: 1 }]));
-
-    const { getByLabelText } = render(<GroceryListPage />);
-
-    const checkbox = getByLabelText('item state pomme') as HTMLInputElement;
-
-    act(() => {
-      userEvent.click(checkbox);
-    });
-
-    expect(checkbox.checked).toBe(false);
-  });
-
-  it('should update item in localStorage on toggle checked', () => {
-    mockUseAddGroceryItem();
-    localStorage.getItem.mockReturnValue(JSON.stringify([{ name: 'pomme', checked: true, id: 1 }]));
-
-    const { getByLabelText } = render(<GroceryListPage />);
-
-    const checkbox = getByLabelText('item state pomme') as HTMLInputElement;
-
-    act(() => {
-      userEvent.click(checkbox);
-    });
+    fireEvent.click(getByText('Checked'));
 
     const value = JSON.stringify([{ name: 'pomme', checked: true, id: 1 }]);
-    expect(localStorage.setItem).toHaveBeenCalledWith('wat-food', value);
+    expect(localStorage.setItem).toHaveBeenLastCalledWith('wat-food', value);
+  });
+
+  it('should remove item from the list', () => {
+    mockUseAddGroceryItem({ item: { name: 'pomme', checked: false, id: 1 } });
+
+    const { getByText } = render(<GroceryListPage />);
+
+    fireEvent.click(getByText('Delete'));
+
+    expect(localStorage.setItem).toHaveBeenCalledWith('wat-food', JSON.stringify([]));
   });
 });
