@@ -17,7 +17,7 @@ const Header: React.FC<{ openForm: () => void }> = ({ openForm }) => {
   const history = useHistory();
 
   return (
-    <AppBar position="static">
+    <AppBar position="static" data-testid="header">
       <Toolbar>
         {pathname !== '/' && (
           <IconButton
@@ -32,7 +32,7 @@ const Header: React.FC<{ openForm: () => void }> = ({ openForm }) => {
           </IconButton>
         )}
         <Typography className={classes.title} variant="h6">
-          {pathname === '/' ? 'LISTS' : pathname.split('/')[1].toUpperCase()}
+          {pathname && (pathname === '/' ? 'LISTS' : pathname.split('/')[1].toUpperCase())}
         </Typography>
 
         <IconButton edge="start" color="inherit" aria-label="new-list" onClick={openForm}>

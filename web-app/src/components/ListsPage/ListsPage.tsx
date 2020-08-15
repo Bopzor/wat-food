@@ -10,7 +10,7 @@ export type GroceryList = {
   items: GroceryItemType[];
 };
 
-type ListsPageProps = {
+export type ListsPageProps = {
   lists: GroceryList[];
   deleteList: (index: number) => void;
 };

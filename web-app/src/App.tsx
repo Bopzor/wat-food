@@ -54,7 +54,7 @@ const App: React.FC = () => {
     localStorage.setItem('wat-food', JSON.stringify(lists));
   }, [lists]);
 
-  const handleSubmit = (event: React.FormEvent): void => {
+  const handleCreateList = (event: React.FormEvent): void => {
     event.preventDefault();
 
     setLists([{ name, items: [] }, ...lists]);
@@ -63,8 +63,8 @@ const App: React.FC = () => {
     history.push(`/${name}`, { list: { name, items: [] }, index: 0 });
   };
 
-  const handleUpdateList = (items: GroceryItemType, listIndex: number): void => {
-    setLists([...lists.slice(0, listIndex), { ...lists[listIndex], items }, ...lists.slice(listIndex + 1)]);
+  const handleUpdateList = (items: GroceryItemType[], listIndex: number): void => {
+    setLists((l) => [...l.slice(0, listIndex), { ...l[listIndex], items }, ...l.slice(listIndex + 1)]);
   };
 
   const handleDeleteList = (listIndex: number): void => {
@@ -80,7 +80,7 @@ const App: React.FC = () => {
         <Dialog open={open} onClose={(): void => setOpen(false)} aria-labelledby="form-dialog-title">
           <DialogTitle id="form-dialog-title">New list</DialogTitle>
           <DialogContent>
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleCreateList} data-testid="list-form">
               <TextField
                 autoFocus
                 margin="dense"
@@ -97,12 +97,12 @@ const App: React.FC = () => {
 
         <div className={classes.app} data-testid="app">
           <Switch>
-            <Route exact path="/">
-              <ListsPage lists={lists} deleteList={handleDeleteList} />
-            </Route>
-
             <Route path="/:name">
               <GroceryListPage updateLists={handleUpdateList} />
+            </Route>
+
+            <Route exact path="/">
+              <ListsPage lists={lists} deleteList={handleDeleteList} />
             </Route>
           </Switch>
         </div>

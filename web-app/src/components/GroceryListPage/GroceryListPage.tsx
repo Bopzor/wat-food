@@ -8,8 +8,8 @@ import GroceryList from '../GroceryList/GroceryList';
 
 import { useAddGroceryItem } from './use-add-grocery-item';
 
-type GrocePageProps = {
-  updateLists: (items: GroceryItemType, index: number) => void;
+export type GroceyListPageProps = {
+  updateLists: (items: GroceryItemType[], index: number) => void;
 };
 
 const useStyles = makeStyles(() => ({
@@ -22,7 +22,7 @@ const useStyles = makeStyles(() => ({
   },
 }));
 
-const GroceryListPage: React.FC<GrocePageProps> = ({ updateLists }) => {
+const GroceryListPage: React.FC<GroceyListPageProps> = ({ updateLists }) => {
   const { state } = useLocation();
   const { list, index } = state;
   const savedItems = list?.items;
@@ -92,7 +92,7 @@ const GroceryListPage: React.FC<GrocePageProps> = ({ updateLists }) => {
   };
 
   return (
-    <div className={classes.container}>
+    <div className={classes.container} data-testid="grocery-list">
       <GroceryList items={items} checkItem={handleCheckItem} deleteItem={handleDeleteItem} />
       <AddGroceryItem addItem={handleAddItem} />
     </div>
