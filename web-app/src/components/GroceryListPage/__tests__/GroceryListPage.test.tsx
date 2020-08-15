@@ -3,6 +3,8 @@
 import React from 'react';
 
 import { fireEvent, render } from '@testing-library/react';
+import { createMemoryHistory, MemoryHistory } from 'history';
+import { Router } from 'react-router';
 
 import { AddGroceryItemProps } from '../../AddGroceryItem/AddGroceryItem';
 import { GroceryListProps } from '../../GroceryList/GroceryList';
@@ -54,40 +56,64 @@ const mockUseAddGroceryItem = (returnValue = {}) => {
 };
 
 describe('GroceryListPage', () => {
+  let history: MemoryHistory | undefined;
+  const mockUpdateLists = jest.fn();
+
+  beforeEach(() => {
+    history = createMemoryHistory();
+    history.push('/list', { index: 0, list: [] });
+  });
+
   afterEach(() => {
     jest.resetAllMocks();
   });
 
   it('should store item on submit', () => {
     mockUseAddGroceryItem();
-    const { getByText } = render(<GroceryListPage />);
+    const { getByText } = render(
+      <Router history={history}>
+        <GroceryListPage updateLists={mockUpdateLists} />
+      </Router>,
+    );
 
     fireEvent.click(getByText('Submit'));
 
-    const value = JSON.stringify([{ name: 'pomme', checked: false }]);
+    const value = [{ name: 'pomme', checked: false }];
 
-    expect(localStorage.setItem).toHaveBeenCalledWith('wat-food', value);
+    expect(mockUpdateLists).toHaveBeenLastCalledWith(value, 0);
   });
 
   it('should display added item in list ', () => {
     mockUseAddGroceryItem();
-    const { getByText } = render(<GroceryListPage />);
+    const { getByText } = render(
+      <Router history={history}>
+        <GroceryListPage updateLists={mockUpdateLists} />
+      </Router>,
+    );
 
     fireEvent.click(getByText('Submit'));
 
     expect(getByText('pomme')).toBeVisible();
   });
 
-  it('should display existing data from localStorage', () => {
+  it('should display list data', () => {
     mockUseAddGroceryItem();
-    localStorage.getItem.mockReturnValue(
-      JSON.stringify([
-        { name: 'pomme', checked: false, id: 1 },
-        { name: 'banane', checked: true, id: 2 },
-      ]),
-    );
+    history.push('/list', {
+      index: 0,
+      list: {
+        name: 'list',
+        items: [
+          { name: 'pomme', checked: false, id: 1 },
+          { name: 'banane', checked: true, id: 2 },
+        ],
+      },
+    });
 
-    const { getByLabelText, getByText } = render(<GroceryListPage />);
+    const { getByLabelText, getByText } = render(
+      <Router history={history}>
+        <GroceryListPage updateLists={mockUpdateLists} />
+      </Router>,
+    );
 
     const checkbox = getByLabelText('item state banane') as HTMLInputElement;
 
@@ -98,32 +124,50 @@ describe('GroceryListPage', () => {
   it('should send item to api on submit', () => {
     const mockAdd = jest.fn();
     mockUseAddGroceryItem({ add: mockAdd });
-    const { getByText } = render(<GroceryListPage />);
+    const { getByText } = render(
+      <Router history={history}>
+        <GroceryListPage updateLists={jest.fn} />
+      </Router>,
+    );
 
     fireEvent.click(getByText('Submit'));
 
     expect(mockAdd).toHaveBeenCalledWith('pomme');
   });
 
-  it('should update localStorage on toggle checkbox', () => {
+  it('should update items on toggle checkbox', () => {
     mockUseAddGroceryItem();
-    localStorage.getItem.mockReturnValue(JSON.stringify([{ name: 'pomme', checked: false, id: 1 }]));
+    history.push('/list', {
+      index: 0,
+      list: {
+        name: 'list',
+        items: [{ name: 'pomme', checked: false, id: 1 }],
+      },
+    });
 
-    const { getByText } = render(<GroceryListPage />);
+    const { getByText } = render(
+      <Router history={history}>
+        <GroceryListPage updateLists={mockUpdateLists} />
+      </Router>,
+    );
 
     fireEvent.click(getByText('Checked'));
 
-    const value = JSON.stringify([{ name: 'pomme', checked: true, id: 1 }]);
-    expect(localStorage.setItem).toHaveBeenLastCalledWith('wat-food', value);
+    const value = [{ name: 'pomme', checked: true, id: 1 }];
+    expect(mockUpdateLists).toHaveBeenLastCalledWith(value, 0);
   });
 
   it('should remove item from the list', () => {
     mockUseAddGroceryItem({ item: { name: 'pomme', checked: false, id: 1 } });
 
-    const { getByText } = render(<GroceryListPage />);
+    const { getByText } = render(
+      <Router history={history}>
+        <GroceryListPage updateLists={mockUpdateLists} />
+      </Router>,
+    );
 
     fireEvent.click(getByText('Delete'));
 
-    expect(localStorage.setItem).toHaveBeenCalledWith('wat-food', JSON.stringify([]));
+    expect(mockUpdateLists).toHaveBeenCalledWith([], 0);
   });
 });
